@@ -1,0 +1,430 @@
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BeRobot | Blockly DIY Robot</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <script src="../blockly_compressed.js"></script>
+  <script src="../blocks_compressed.js"></script>
+  <script src="../msg/js/en.js"></script>
+  <script src="../javascript_compressed.js"></script>
+  <script src="../python_compressed.js"></script>
+  <script src="../demos/prettify.js"></script>
+  <script src="../demos/interpreter/acorn_interpreter.js"></script>
+  <script src="../common.js"></script>
+  <link href="../demos/prettify.css" rel="stylesheet">
+</head>
+
+<body>
+  <script type="text/javascript" src="robot.js"></script>
+  <div id="social-icons" >
+
+    <select id="languageSelect" title="Switch to Chinese" onchange="this.options[this.selectedIndex].value &amp;&amp; (window.location = this.options[this.selectedIndex].value);">
+      <option value="blockly_en.html">English</option>
+      <option value="blockly_zh.html">中文</option>
+    </select>
+
+    <a href="https://www.youtube.com/user/GestreamTw" class="icon-youtube"></a>
+    <a href="https://plus.google.com/+berobot" class="icon-gplus"></a>
+    <a href="https://www.facebook.com/berobot" class="icon-facebook"></a>
+    <a href="https://twitter.com/BeRobot" class="icon-twitter"></a>
+  </div>
+
+  <a id="logo" href="http://www.berobot.com/BeRobot/NDP_E_index.html">
+    <img src="../media/logo.jpg" title="Home" alt="Home" width="250" height="83.4" >
+  </a>
+
+  <div id="headerpart">
+    <ul class="navigation" >
+      <li class="menu_link"><a  href="http://www.berobot.com/BeRobot/NDP_E_index.html">Home</a></li>
+      <li class="menu_link"><a  href="http://www.berobot.com/BeRobot/NDP_E_storetc.html">Products</a></li>
+      <li class="menu_link"><a  href="http://www.berobot.com/BeRobot/NDP_E_educationtc.html">Courses</a></li>
+      <li class="menu_link"><a  href="http://www.berobot.com/BeRobot/NDP_E_companytc.html">About Us</a></li>
+
+    </ul>
+  </div>
+
+  <div class="app-container" style="z-index: 1">
+    <div id="helpDiv" class="help-panel">
+      <table class="normtable">
+        <tr>
+          <td>
+            <button id="clearButton" title="Delete all blocks" onclick="Blockly.Apps.erase();">Clear All</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="blocklyDiv" class="main blockly-panel"></div>
+    <div id="codeDiv" class="main output-panel">
+      <div class="dropdown-bar">
+        Language:
+        <div id="im-just-an-underline">
+          <select id="languageDropdown" onChange="myUpdateFunction();">
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+          </select>
+        </div>
+      </div>
+      <hr class="POps">
+      <pre></pre>
+    </div>
+</div>
+
+<table style="position:absolute; top: 125.4px; left:0; right:0; bottom:0;">
+  <tr>
+    <td style="z-index: -1; postion:fixed; width: 1150px;min-width:697px;"></td>
+    <td style="vertical-align:top">
+      <div class="robot-app" >
+        <div style="border-style:solid; border-width:1px; border-color:black; width:401px;">
+          <canvas id="scratch" width="400" height ="400" style="display:none"></canvas>
+          <canvas id="display" width="400" height="400" ></canvas>
+        </div>
+        <table style = "padding-top: 1em;">
+          <tr>
+            <td style="width: 190px; text-align:center">
+              <script type="text/javascript" src="slider.js"></script>
+              <svg id="slider" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="150" height="50">
+                <clipPath id="slowClipPath">
+                  <rect width="26" height="12" x="5" y="14"></rect>
+                </clipPath>
+                <image xlink:href="../media/icons.png" height="42" width="84" x="-21" y="-10" clip-path="url(#slowClipPath)"></image>
+                <clipPath id="fastClipPath">
+                  <rect width="26" height="16" x="120" y="10"></rect>
+                </clipPath>
+                <image xlink:href="../media/icons.png" height="42" width="84" x="120" y="-11" clip-path="url(#fastClipPath)"></image>
+              </svg>
+            </td>
+            <td style="width: 15px;">
+              <img id="spinner" style="visibility: hidden;" src="../media/loading.gif" height="15" width="15">
+            </td>
+            <td style="width: 190px; text-align: center">
+              <button id="runButton" class="launch" onclick="Robot.runButtonClick();" style="display: inline;">Run Program</button>
+              <button id="resetButton" class="launch" onclick="Robot.resetButtonClick();" style="display: none;">&nbsp; &nbsp; Reset &nbsp; &nbsp;</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              LED: <button id="ledToggle" onclick="toggleLED()">off</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>
+
+  <xml id="toolbox" style="display: none">
+    <category id="catRobot" colour="80" name="Robot">
+      <block type="draw_move_forward_100"></block>
+      <block type="draw_turn_right_90"></block>
+      <block type="draw_move">
+        <value name="PIXELS">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="draw_turn">
+        <value name="DEGREES">
+          <shadow type="math_number">
+            <field name="NUM">90</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="draw_colour">
+        <value name="COLOUR">
+          <shadow type="colour_picker">
+            <field name="COLOUR">#ff0000</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="draw_width">
+        <value name="WIDTH">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="draw_pen"></block>
+      <block type="robot_visibility"></block>
+    </category>
+    <category id="catLogic" colour="210" name="Logic">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_null"></block>
+      <block type="logic_ternary"></block>
+    </category>
+    <category id="catLoops" colour="120" name="Loops">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+        <value name="BY">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_forEach"></block>
+      <block type="controls_flow_statements"></block>
+    </category>
+    <category id="catMath" colour="230" name="Math">
+      <block type="math_number"></block>
+      <block type="math_arithmetic">
+        <value name="A">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="B">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_single">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">9</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_trig">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">45</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_constant"></block>
+      <block type="math_number_property">
+        <value name="NUMBER_TO_CHECK">
+          <shadow type="math_number">
+            <field name="NUM">0</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_change">
+        <value name="DELTA">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_round">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">3.1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_on_list"></block>
+      <block type="math_modulo">
+        <value name="DIVIDEND">
+          <shadow type="math_number">
+            <field name="NUM">64</field>
+          </shadow>
+        </value>
+        <value name="DIVISOR">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_constrain">
+        <value name="VALUE">
+          <shadow type="math_number">
+            <field name="NUM">50</field>
+          </shadow>
+        </value>
+        <value name="LOW">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="HIGH">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_random_int">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_random_float"></block>
+    </category>
+    <category id="catLists" colour="260" name="Lists">
+      <block type="lists_create_with">
+        <mutation items="0"></mutation>
+      </block>
+      <block type="lists_create_with"></block>
+      <block type="lists_repeat">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_length"></block>
+      <block type="lists_isEmpty"></block>
+      <block type="lists_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_getIndex">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_setIndex">
+        <value name="LIST">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_getSublist">
+        <value name="LIST">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_split">
+        <value name="DELIM">
+          <shadow type="text">
+            <field name="TEXT">,</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_sort"></block>
+    </category>
+    <category id="catColour" colour="20" name="Color">
+      <block type="colour_picker"></block>
+      <block type="colour_random"></block>
+      <block type="colour_rgb">
+        <value name="RED">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+        <value name="GREEN">
+          <shadow type="math_number">
+            <field name="NUM">50</field>
+          </shadow>
+        </value>
+        <value name="BLUE">
+          <shadow type="math_number">
+            <field name="NUM">0</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="colour_blend">
+        <value name="COLOUR1">
+          <shadow type="colour_picker">
+            <field name="COLOUR">#ff0000</field>
+          </shadow>
+        </value>
+        <value name="COLOUR2">
+          <shadow type="colour_picker">
+            <field name="COLOUR">#3333ff</field>
+          </shadow>
+        </value>
+        <value name="RATIO">
+          <shadow type="math_number">
+            <field name="NUM">0.5</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+    <sep></sep>
+    <category id="catVariables" colour="330" custom="VARIABLE" name="Variables"></category>
+    <category id="catFunctions" colour="290" custom="PROCEDURE" name="Functions"></category>
+  </xml>
+
+  <script>
+
+    var blocklyDiv = document.getElementById('blocklyDiv');
+    var workspace = Blockly.inject(blocklyDiv,
+        {media: '../media/',
+         toolbox: document.getElementById('toolbox'),
+         zoom:
+           {controls: true}
+        });
+
+    function toggleLED() {
+      var toggle = document.getElementById('ledToggle');
+      var numBlocks = workspace.getAllBlocks().length;
+
+      if(numBlocks > 0){
+        for(i = 0; i < numBlocks; i++){
+          if(toggle.innerHTML == 'on') {
+            toggle.innerHTML = 'off';
+          } else {
+            toggle.innerHTML = 'on';
+          }
+          var request = new XMLHttpRequest();
+          request.open('POST', 'http://localhost:3000');
+          request.send('command=' + toggle.innerHTML);
+        }
+      }else{
+        window.alert("no enough blocks");
+      }
+    }
+
+    function myUpdateFunction(event) {
+
+      var languageDropdown = document.getElementById('languageDropdown');
+      var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
+      var codeDiv = document.getElementById('codeDiv');
+      var codeHolder = document.createElement('pre');
+      codeHolder.className = 'prettyprint but-not-that-pretty';
+      var temp = Blockly[languageSelection].workspaceToCode(workspace);
+      temp = temp.replace(/('.{20}')|(,\s)/g, "");
+      var code = document.createTextNode(temp);
+      codeHolder.appendChild(code);
+      codeDiv.replaceChild(codeHolder, codeDiv.lastElementChild);
+      prettyPrint();
+
+  }
+  workspace.addChangeListener(myUpdateFunction);
+  Blockly.svgResize(workspace);
+
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "blockly_website",
+  "version": "0.0.1",
+  "description": "DIY robot",
+  "dependencies": {
+    "express": "^4.15.2",
+    "serialport": "^5.0.0-beta7",
+    "socket.io": "^2.0.3"
+  },
+  "engines": {
+    "node": "6.10.2",
+    "npm": "3.10.10"
+  }
+}
